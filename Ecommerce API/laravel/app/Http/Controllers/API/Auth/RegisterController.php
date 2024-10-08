@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Apis\Auth;
+namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+
+use App\Http\Requests\API\RegisterRequest;
 use App\Http\traits\Api_Response_Trait;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,9 +19,9 @@ class RegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(RegisterRequest $request )
+    public function store(RegisterRequest $request )
     {
-        $data = $request->except('password');
+        $data = $request->except('password', 'device_name');
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
         $user->token = "Bearer ".$user->createToken($request->device_name)->plainTextToken;

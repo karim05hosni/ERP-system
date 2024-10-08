@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Apis\Admin\InventoryController;
 use App\Http\Controllers\Apis\Admin\ProductsController;
 use App\Http\Controllers\Apis\Auth\EmailVerificationController;
 use App\Http\Controllers\Apis\Auth\LoginController;
@@ -8,7 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Apis\Admin\products;
 use App\Http\Controllers\Admin\SubCategoriesController;
 use App\Http\Controllers\Admin\users;
+use App\Http\Controllers\Apis\Admin\AdminsController;
+use App\Http\Controllers\Apis\Admin\WarehouserController;
 use App\Http\Controllers\dashboard_controller;
+use App\Models\Inventory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +47,16 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/edit/{id}',[users::class, 'edit']);
     Route::get('/delete/{id}',[users::class, 'delete']);
 });
+Route::group(['prefix' => 'warehouse'], function () {
+    Route::get('/', [WarehouserController::class, 'index']);
+    Route::post('/add-warehouse', [WarehouserController::class, 'store']);
+    Route::get('/show-warehouse', [WarehouserController::class, 'show']);
+});
+Route::group(['prefix' => 'inventory'], function () {
+    Route::get('/', [InventoryController::class, 'index']);
+    Route::post('/add-inventory', [InventoryController::class, 'store']);
+    Route::get('/show-inventory', [InventoryController::class, 'show']);
+});
 Route::group(['prefix' => 'subcategories'], function () {
     // dashboard/SubCategories/
     Route::get('/', [SubCategoriesController::class, 'index']);
@@ -63,6 +77,8 @@ Route::group(['prefix'=>'user'], function () {
         Route::post('/sendcode', [EmailVerificationController::class, 'sendCode']);
         Route::post('/verifycode', [EmailVerificationController::class, 'verifyCode']);
     });
-}
-)
-;
+});
+Route::group(['prefix'=>'admins'], function(){
+    Route::get('/', [AdminsController::class, 'index']);
+    Route::post('/create-admin', [AdminsController::class, 'store']);
+});

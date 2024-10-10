@@ -26,7 +26,6 @@ class CartController extends Controller
         }
         // dd($cart);
         if ($cart->products()->find($product->id)) {
-
             // Product already exists in the cart, update the quantity
             $cart->products()->updateExistingPivot($product->id, ['quantity' => $cart->products()->find($product->id)->pivot->quantity + $productData['quantity']]);
         } else {

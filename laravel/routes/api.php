@@ -5,6 +5,10 @@ use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\deliveryApp\Auth\dEmailVerificationController;
+use App\Http\Controllers\API\deliveryApp\Auth\dLoginController;
+use App\Http\Controllers\API\deliveryApp\Auth\dRegisterController;
+use App\Http\Controllers\API\deliveryApp\DeliveryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,4 +48,19 @@ Route::prefix('user')->group(function () {
                 Route::post('verification',[EmailVerificationController::class,'verifyCode']);
             });
         });
+});
+
+Route::prefix('deliveryman')->group(function(){
+    Route::prefix('auth')->group(function () {
+        Route::post('register', [dRegisterController::class, 'store']);
+        Route::post('login', [dLoginController::class, 'login']);
+        Route::prefix('email-verification')->group(function () {
+            Route::post('send-code',[dEmailVerificationController::class,'sendcode']);
+            Route::post('verification',[dEmailVerificationController::class,'verifyCode']);
+        });
+    });
+    Route::group(['middleware'=>'auth:deliveryman'], function (){
+        Route::get('show-orders', [DeliveryController::class, 'showOrders']);
+        Route::get('pick-orders', [DeliveryController::class, 'pickOrders']);
+    });
 });

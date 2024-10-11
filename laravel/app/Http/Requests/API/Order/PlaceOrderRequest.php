@@ -31,6 +31,8 @@ class PlaceOrderRequest extends FormRequest
                 'products' => 'required',
                 'user_id'=> 'required|integer',
                 'address' => 'required|string',
+                'latitude' => 'required|numeric|between:-90,90',
+                'longitude' => 'required|numeric|between:-180,180',
             ];
     }
     

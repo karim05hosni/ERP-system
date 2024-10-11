@@ -14,19 +14,21 @@ use App\Models\Warehouse;
 use App\Notifications\OrderConfirmed;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
-
 use function Laravel\Prompts\error;
 
 class OrderController extends Controller
 {
     use Api_Response_Trait;
+    
 
     public function placeOrder(PlaceOrderRequest $request)
     {
-        $data = $request->except('products');
+        $data = $request->except('products', 'latitude', 'longitude' );
         $data['status'] = 'Pending';
         $data['price'] = 0;
+        $data['coordinates'] = DB::raw("POINT({$request->latitude}, {$request->longitude})");
         $user = User::find(auth('sanctum')->user()->id);
         $order = Order::create($data);
         $warehouse = Warehouse::where('location', $data['address'])->get('id')->first()->id;
@@ -54,9 +56,15 @@ class OrderController extends Controller
                     ->decrement('quantity', $productData['quantity']); 
                 }
             } else {
-                $warehouse = Inventory::where('product_id', $product->id)
+                try {
+                    //code...
+                    $warehouse = Inventory::where('product_id', $product->id)
                     ->where('quantity', '>', $productData['quantity'])
                     ->get('warehouse_id')->first()->warehouse_id;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    return response()->json(['message' => 'Product not available in any warehouse'], 404);
+                }
                 Inventory::where('warehouse_id', $warehouse)->where('product_id', $product->id)->first()->update([
                     'quantity' => Inventory::where('warehouse_id', $warehouse)->where('product_id', $product->id)->first()->quantity - $productData['quantity']
                 ]);
@@ -83,8 +91,17 @@ class OrderController extends Controller
             Order::where('id', $order->id)->update(['status' => 'Confirmed', 'price' => $data['price']]);
             // notify user
             FacadesNotification::send($user, new OrderConfirmed($order));
+            $coordinates = Order::query()->select([
+                DB::raw('ST_X(coordinates) AS lat'),
+                DB::raw('ST_Y(coordinates) AS lng')
+            ])->where('id', $order->id)->first();
             // return response
-            return $this->Api_Response(message: 'Order Confirmed !', data: Order::where('id', $order->id)->first()->toArray());
+            return $this->Api_Response(message: 'Order Confirmed !', data: Order::where('id', $order->id)
+            ->select('id', 'status', 'price')
+            ->first()
+            ->toArray() +  [
+            'coordinates' => $coordinates->lat.','.$coordinates->lng 
+            ]);
         } else {
             Order::where('id', $data['id'])->update(['status' => 'Canceled']);
             // notify user

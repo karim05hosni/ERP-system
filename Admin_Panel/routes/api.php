@@ -35,7 +35,7 @@ Route::group(['middleware' => 'verify'], function () {
 
 Route::group(['prefix' => 'products'], function () {
     // dashboard/products/
-    Route::get('/', [ProductsController::class, 'all_products']);
+    Route::get('/', [ProductsController::class, 'all_products'])->name('products.fetch');
     Route::post('/store',[ProductsController::class, 'store']);
     Route::put('/update/{id}',[ProductsController::class, 'update']);
     Route::delete('/delete/{id}',[ProductsController::class, 'destroy']);
@@ -50,11 +50,15 @@ Route::group(['prefix' => 'users'], function () {
 Route::group(['prefix' => 'warehouse'], function () {
     Route::get('/', [WarehouserController::class, 'index']);
     Route::post('/add-warehouse', [WarehouserController::class, 'store']);
+    Route::post('/edit-warehouse/{id}', [WarehouserController::class, 'update']);
     Route::get('/show-warehouse', [WarehouserController::class, 'show']);
+    Route::delete('/destroy-warehouse/{id}', [WarehouserController::class, 'destroy']);
 });
 Route::group(['prefix' => 'inventory'], function () {
     Route::get('/', [InventoryController::class, 'index']);
     Route::post('/add-inventory', [InventoryController::class, 'store']);
+    Route::post('/update-inventory/{id}', [InventoryController::class, 'update']);
+    Route::delete('/delete-inventory/{id}', [InventoryController::class, 'destroy']);
     Route::get('/show-inventory', [InventoryController::class, 'show']);
 });
 Route::group(['prefix' => 'subcategories'], function () {
@@ -82,3 +86,6 @@ Route::group(['prefix'=>'admins'], function(){
     Route::get('/', [AdminsController::class, 'index']);
     Route::post('/create-admin', [AdminsController::class, 'store']);
 });
+
+
+

@@ -8,41 +8,14 @@ use App\Models\Order;
 
 class PaymentService
 {
-    public function __construct()
+    public function createCheckoutSession($lineItems)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));  // Get Stripe API key from .env
-    }
-
-    // Handle the creation of a Stripe Checkout Session
-    public function createCheckoutSession(array $data, $success_url='https://your-payment-gateway.com/payment-success',$cancel_url='https://your-payment-gateway.com/payment-failed')
-    {
-        // Save the order directly using Eloquent
-        $order = Order::create([
-            'product_name' => $data['product_name'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-        ]);
-
-        $order_data = [
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $order->product_name,
-                    ],
-                    'unit_amount' => $order->price*100,  // Amount in cents (e.g., 2000 = $20)
-                ],
-                'quantity' => $order->quantity,
-            ]],
+        $stripe = new \Stripe\StripeClient('sk_test_51Q3O7vA9AuhZk2XNTPOS5rJcKcrTXTCncRDjfnXELOmJuXR9mpBJYFBztFqSjes6KPd2aGvLxk6Mr18xsb9ZWWTT00rtSfsCqG');
+        $response = $stripe->checkout->sessions->create([
+            'success_url' => url('/api/checkout-success?session_id={CHECKOUT_SESSION_ID}'),
+            'line_items' => $lineItems,
             'mode' => 'payment',
-            'metadata' => [
-                'order_id' => $order->id,  // Pass the order_id here
-            ],
-            'success_url' => route('success',$order->id).'?redirect_url=' . urlencode($success_url),
-            'cancel_url' => $cancel_url,
-        ];
-        // Create a Stripe Checkout Session
-        return Session::create($order_data);
+        ]);
+        return $response;
     }
 }

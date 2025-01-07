@@ -64,11 +64,20 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        // decode JSON
-        $data = json_decode($request->getContent(), true);
-        $inventory = Inventory::create($data);
-        return $this->Api_Response(message: 'inventory Created Successfuly !', data: $inventory);
+        $validatedData = $request->validate([
+            'product_name' => 'required|string|max:255',
+            'quantity_inhand' => 'required|integer',
+            'warehouse_id' => 'required|exists:warehouses,id',
+        ]);
+
+        Inventory::create($validatedData);
+
+        return response()->json([
+            'message' => 'Inventory added successfully!',
+            'data' => $validatedData,
+        ], 201);
     }
+
 
     /**
      * Display the specified resource.

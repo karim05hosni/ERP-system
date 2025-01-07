@@ -20,17 +20,17 @@
             </div>
         </div>
     </div>
-    <div id="addWarehouseModal" class="modal" style="display: none;">
+    <div id="addInventoryModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <div id="addWarehouseFormContainer">
+            <div id="addInventoryFormContainer">
                 <!-- add form will be loaded here -->
             </div>
         </div>
     </div>
     <div class="container">
         <h1>Inventory Stock Management</h1>
-        <button id="addWarehouse">Add Warehouse</button>
+        <button id="addInventory">Add Inventory</button>
         <table id="inventoryTable" class="table table-bordered">
             <thead>
                 <tr>
@@ -159,6 +159,9 @@
                 }
             });
         });
+        $(document).on('click', '.close', function() {
+    $('#editinventoryModal').hide();
+});
 
 
         // Save the edited inventory
@@ -166,7 +169,7 @@
             const inventoryId = $('#editinventoryForm input[name="id"]').val(); // Get inventory ID
             const url = `/api/inventory/update-inventory/${inventoryId}`; // API route
             const formData = $('#editinventoryForm').serialize(); // Serialize form data
-            
+
             $.ajax({
                 url: url,
                 method: 'POST', // Use PUT for updating resources
@@ -183,6 +186,61 @@
                 error: function(xhr, status, error) {
                     console.error('Error updating warehouse:', error);
                     alert('Failed to update warehouse. Please try again.');
+                }
+            });
+        });
+
+
+        // Insert inventory
+        $(document).on('click', '#addInventory', function() {
+            const url = '/inventory/add'; // Your route to fetch the Add form
+
+            // Show a loading indicator or message
+            $('#addInventoryFormContainer').html('<p>Loading...</p>');
+            $('#addInventoryModal').show();
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Load the response HTML (Add form) into the modal
+                    $('#addInventoryFormContainer').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading add form:', error);
+                    $('#addInventoryFormContainer').html(
+                        '<p>Error loading form. Please try again later.</p>');
+                }
+            });
+        });
+        $(document).on('click', '.close', function() {
+    $('#addInventoryModal').hide();
+});
+
+
+        // Submit Insert form
+        $(document).on('submit', '#addInventoryForm', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const formData = $(this).serialize(); // Serialize form data
+            const url = '/api/inventory/add-inventory'; // API endpoint for adding inventory
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    alert('Inventory added successfully!');
+
+                    // Hide the modal
+                    $('#addWarehouseModal').hide();
+
+                    // Reload the inventory list
+                    loadInventory();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error adding inventory:', error);
+                    alert('Failed to add inventory. Please try again.');
                 }
             });
         });

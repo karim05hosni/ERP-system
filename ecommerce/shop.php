@@ -7,14 +7,14 @@ include_once("layout/nav.php");
 include_once "app/models/product.php";
 include_once "app/models/brand.php";
 $product = new product;
-if(isset($_GET['sub'])){
+if (isset($_GET['sub'])) {
     $product->set_sub_cate_id($_GET['sub']);
     // echo "f";
 }
 $image_path = "../Admin_Panel/public/dist/img/products/";
 
 $brands = new brand;
-if (isset($_GET['brand'])){
+if (isset($_GET['brand'])) {
     $product->set_brand_id($_GET['brand']);
 };
 $read_product = $product->read();
@@ -30,14 +30,16 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
     .product-width {
         box-shadow: inset #DEEDEF;
     }
+
     .product-wrapper {
         /* position: relative; */
-    border-radius: 6px;
-    /* background-color: gray; */
-    padding: 12px;
-    box-shadow: 2px 3px #569b36;
+        border-radius: 6px;
+        /* background-color: gray; */
+        padding: 12px;
+        box-shadow: 2px 3px #569b36;
     }
 </style>
+
 <body>
     <!-- Shop Page Area Start -->
     <div class="shop-page-area ptb-100">
@@ -71,77 +73,59 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
                             </div>
                         </div>
                     </div>
-                    <?php 
-                        if (isset($_GET['s'])){
-                            echo '<div class="alert alert-success">Purchased Successfully !</div>';
-                        }
-                        ?>
+                    <?php
+                    if (isset($_GET['s'])) {
+                        echo '<div class="alert alert-success">Purchased Successfully !</div>';
+                    }
+                    ?>
                     <div class="grid-list-product-wrapper">
                         <div class="product-grid product-view pb-20">
                             <div class="row">
                                 <?php
                                 if (isset($read_product)) {
-                                    if(!empty($read_product)){
-                                    $fetch_product = $read_product->fetch_all(MYSQLI_ASSOC);
-                                    foreach ($fetch_product as $key => $value) {
+                                    if (!empty($read_product)) {
+                                        $fetch_product = $read_product->fetch_all(MYSQLI_ASSOC);
+                                        foreach ($fetch_product as $key => $value) {
                                 ?>
-                                        <div class="product-width col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mb-30">
-                                            <div class="product-wrapper">
-                                                <div class="product-img">
-                                                    
-                                                    <a href="product-details.php?pid=<?= $value['id']?>">
-                                                        <img alt="" src="<?=$image_path.$value['image']?>">
-                                                    </a>
-                                                    <span>-30%</span>
-                                                    <div class="product-action">
-                                                        <a class="action-wishlist" href="#" title="Wishlist">
-                                                            <i class="ion-android-favorite-outline"></i>
+                                            <div class="product-width col-xl-4 col-lg-4 col-md-4 col-sm-6 col-12 mb-30">
+                                                <div class="product-wrapper">
+                                                    <div class="product-img">
+                                                        <a href="product-details.php?pid=<?= $value['id'] ?>">
+                                                            <img alt="" src="<?= $image_path . $value['image'] ?>">
                                                         </a>
-                                                        <a class="action-cart" href="" title="Add To Cart">
-                                                            <i class="ion-ios-shuffle-strong"></i>
-                                                        </a>
-                                                        <a class="action-compare" href="#" data-target="#exampleModal" data-toggle="modal" title="Quick View">
-                                                            <i class="ion-ios-search-strong"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="product-content text-left">
-                                                    <div class="product-hover-style">
-                                                        <div class="product-title">
-                                                            <h4>
-                                                                <a href="product-details.php?pid=<?= $value['id']?>"><?= $value['name_en'] ?></a>
-                                                            </h4>
-                                                        </div>
-                                                        <div class="cart-hover">
-                                                            <h4><a href="product-details.php?pid=<?= $value['id']?>">+ Add to cart</a></h4>
+                                                        <span>-30%</span>
+                                                        <div class="product-action">
+                                                            <a class="action-wishlist" href="#" title="Wishlist">
+                                                                <i class="ion-android-favorite-outline"></i>
+                                                            </a>
+                                                            <!-- Add to Cart Button -->
+                                                            <a class="action-cart add-to-cart" href="#" title="Add To Cart" data-product-id="<?= $value['id'] ?>" data-user-id="1" data-quantity="1">
+                                                                <i class="ion-ios-shuffle-strong"></i>
+                                                            </a>
+                                                            <a class="action-compare" href="#" data-target="#exampleModal" data-toggle="modal" title="Quick View">
+                                                                <i class="ion-ios-search-strong"></i>
+                                                            </a>
                                                         </div>
                                                     </div>
-                                                    <div class="product-price-wrapper">
-                                                        <span><?= $value['price'] ?> EGP</span>
-                                                        <!-- <span class="product-price-old">$120.00 </span> -->
-                                                    </div>
-                                                </div>
-                                                <div class="product-list-details">
-                                                    <h4>
-                                                        <a href="product-details.html">Nature Close Tea</a>
-                                                    </h4>
-                                                    <div class="product-price-wrapper">
-                                                        <span><?= $value['price'] ?></span>
-                                                        <!-- <span class="product-price-old">$120.00 </span> -->
-                                                    </div>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipic it, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                                    <div class="shop-list-cart-wishlist">
-                                                        <a href="#" title="Wishlist"><i class="ion-android-favorite-outline"></i></a>
-                                                        <a href="#" title="Add To Cart"><i class="ion-ios-shuffle-strong"></i></a>
-                                                        <a href="#" data-target="#exampleModal" data-toggle="modal" title="Quick View">
-                                                            <i class="ion-ios-search-strong"></i>
-                                                        </a>
+                                                    <div class="product-content text-left">
+                                                        <div class="product-hover-style">
+                                                            <div class="product-title">
+                                                                <h4>
+                                                                    <a href="product-details.php?pid=<?= $value['id'] ?>"><?= $value['name_en'] ?></a>
+                                                                </h4>
+                                                            </div>
+                                                            <div class="cart-hover add-to-cart" data-product-id="<?= $value['id'] ?>" data-user-id="1" data-quantity="1">
+                                                                <h4><a href="#">+ Add to cart</a></h4>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-price-wrapper">
+                                                            <span><?= $value['price'] ?> EGP</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                 <?php
-                                    }
+                                        }
                                     } else {
                                         echo "<div class='alert alert-danger'> No products to show </div>";
                                     }
@@ -184,29 +168,29 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
                                                 // fetch
                                                 if (!empty($read_sub_categories->num_rows) && $read_sub_categories->num_rows > 0) {
                                     ?>
-                                                    <li> <a data-toggle="collapse" data-parent="#faq" href="#shop-catigory-<?=$key?>"><?= $category['name_en'] ?> <i class="ion-ios-arrow-down"></i></a>
-                                                        <ul id="shop-catigory-<?=$key?>" class="panel-collapse collapse show">
+                                                    <li> <a data-toggle="collapse" data-parent="#faq" href="#shop-catigory-<?= $key ?>"><?= $category['name_en'] ?> <i class="ion-ios-arrow-down"></i></a>
+                                                        <ul id="shop-catigory-<?= $key ?>" class="panel-collapse collapse show">
                                                             <?php
                                                             $fetch_sub_categories = $read_sub_categories->fetch_all(MYSQLI_ASSOC);
                                                             if (isset($fetch_sub_categories)) {
                                                                 foreach ($fetch_sub_categories as $key => $value) {
                                                             ?>
                                                                     <!-- subcategories start -->
-                                                                    <li><a href="shop.php?sub=<?=$value['id']?>"><?= $value['name_en']?></a></li>
+                                                                    <li><a href="shop.php?sub=<?= $value['id'] ?>"><?= $value['name_en'] ?></a></li>
                                                                     <!-- subcategories end -->
-                                                            <?php }?>
+                                                                <?php } ?>
                                                         </ul>
                                                     </li>
-                                        <?php
+                                            <?php
                                                             }
                                                         }
-                                        ?>
-                                        <!-- categories end -->
-                            <?php
+                                            ?>
+                                            <!-- categories end -->
+                                <?php
                                             }
                                         }
                                     }
-                            ?>
+                                ?>
                                 </ul>
                             </div>
                         </div>
@@ -218,9 +202,9 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
                                     foreach ($brands_arr as $key => $item) {
                                     ?>
 
-                                    <ul class="panel-collapse collapse show">
-                                            <li><a href="shop.php?brand=<?=$item['id']?>"><?= $item['name_en']?></a></li>
-                                    </ul>
+                                        <ul class="panel-collapse collapse show">
+                                            <li><a href="shop.php?brand=<?= $item['id'] ?>"><?= $item['name_en'] ?></a></li>
+                                        </ul>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -240,7 +224,7 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
             </div>
         </div>
     </div>
-    
+
     <!-- Shop Page Area End -->
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
@@ -327,6 +311,53 @@ $brands_arr = $brands->read()->fetch_all(MYSQLI_ASSOC);
     <?php
     include_once("layout/footer.php");
     ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default link behavior
+
+                    // Get product data from the button's data attributes
+                    const productId = this.getAttribute('data-product-id');
+                    const userId = this.getAttribute('data-user-id');
+                    const quantity = this.getAttribute('data-quantity');
+
+                    // Prepare the data to send
+                    const data = {
+                        user_id: <?=$_SESSION['user']->id ?>,
+                        product_id: productId,
+                        quantity: quantity
+                    };
+                    // Send AJAX POST request
+                    fetch('app/post/add_to_cart.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok.');
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            if (result.success) {
+                                alert('Product added to cart successfully!');
+                                console.log('Cart ID:', result.cart_id);
+                            } else {
+                                alert('Failed to add product to cart: ' + result.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while adding the product to the cart.');
+                        });
+                    });
+            });
+        });
+    </script>
     <!-- all js here -->
     <script src="assets/js/vendor/jquery-1.12.0.min.js"></script>
     <script src="assets/js/popper.js"></script>

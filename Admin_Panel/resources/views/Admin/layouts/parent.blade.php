@@ -213,7 +213,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url('api/inventory')}}" class="nav-link">
+                <a href="{{url('inventory')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Stock</p>
                 </a>

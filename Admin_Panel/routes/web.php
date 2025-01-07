@@ -56,6 +56,12 @@ Route::get(
     }
 );
 Route::get(
+    '/inventory/add',
+    function () {
+        return view('Admin.Inventory.stock.add');
+    }
+);
+Route::get(
     '/inventory/edit/{id}',
     function ($id) {
         // Retrieve the inventory record with related data
@@ -77,6 +83,7 @@ Route::get(
         return view('Admin.inventory.stock.edit', compact('data'));
     }
 );
+
 Route::group(['prefix' => 'dashboard', 'middleware' => 'verified'], function () {
     // /dashboard
     Route::get('/', [dashboard_controller::class, 'index']);

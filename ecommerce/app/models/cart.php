@@ -156,7 +156,7 @@ class cart extends config implements ops
             $cart = $cart_result->fetch_assoc();
 
             // Fetch associated products
-            $query = "SELECT p.id, p.name_en, p.price,  cp.quantity FROM products p 
+            $query = "SELECT p.id, p.name_en, p.price,p.image,  cp.quantity FROM products p 
             JOIN cart_product cp ON p.id = cp.product_id 
             WHERE cp.cart_id = $cart_id";
             $products_result = $this->runDQL($query);

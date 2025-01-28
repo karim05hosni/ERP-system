@@ -1,16 +1,22 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 $title = "details";
 include_once "layout/header.php";
 include_once "layout/nav.php";
 include_once "layout/breadcrumb.php";
 include_once "app/models/product.php";
-if(!isset($_GET['pid'])){
+if(!isset($_GET['pid']) || !is_numeric($_GET['pid'])){
     header('location:layout/errors/404.php');die;
 }
 // ----set_id----
 $productobj = new product;
 // "setid($_GET['pid'])";
 // "SELECT * FROM products WHERE id=this->id";
+// validate $_GET['pid']
+
+
 $productobj->setid($_GET['pid']);
 $read_productobj = $productobj->read();
 // print_r($read_productobj);

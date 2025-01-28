@@ -1,7 +1,7 @@
 <?php
 $title = "shop";
-include_once("layout/header.php");
-include_once("layout/nav.php");
+require("layout/header.php");
+require("layout/nav.php");
 // include_once("layout/breadcrumb.php");
 // include_once("layout/breadcrumb.php");
 include_once "app/models/product.php";

@@ -84,7 +84,7 @@ Route::get(
     }
 );
 
-Route::group(['prefix' => 'dashboard', 'middleware' => 'verified'], function () {
+Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
     // /dashboard
     Route::get('/', [dashboard_controller::class, 'index']);
 

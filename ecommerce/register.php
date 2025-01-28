@@ -16,21 +16,12 @@ if ($_POST){
     if (empty($fn_req)) {
         $success['fn']=1;
     }
-
-    // -----last_name validation------
-    // $ln_validation = new validation('last_name', $_POST['last-name']);
-    // $ln_req = $ln_validation->required();
-    // if (empty($ln_req)) {
-    //     $success['ln']=2;
-    // }
     // -----email_validation------
     $email_validation = new Validation('email', $_POST['user-email']);
     $email_req = $email_validation->required();
     if (empty($email_req)) {
         // $email_regex = $email_validation->regex('');
         $email_unique = $email_validation->unique('users');
-    echo 'ssssss';
-
         if (empty($email_unique)) {
             $success['email']=3;
         }
@@ -50,7 +41,6 @@ if ($_POST){
     $phone_req = $phone_validation->required();
     if (empty($phone_req)) {
         $phone_unique = $phone_validation->unique('users');
-
         if (empty($phone_unique)) {
             $success['phone']=5;
         }
@@ -71,7 +61,6 @@ if ($_POST){
         $result = $userObj->creat();
         try {
             if ($result) {
-                echo 'insert-ed';
                 $subject = 'verify';
                 $message = "HELLO {$_POST['name']},<br>this is your verification code:$code</br>";
                 $mail = new mail($_POST['user-email'],$subject, $message);
